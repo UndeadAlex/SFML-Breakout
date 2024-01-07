@@ -2,6 +2,7 @@
 
 #include "GameConstants.h"
 #include "GameRandom.h"
+#include "GameManager.h"
 
 #if _DEBUG // If Debug Config, use console subsystem
 int main()
@@ -17,6 +18,9 @@ int WinMain()
 
 	// clock for timing
 	sf::Clock clock;
+
+	GameManager gameManager;
+	gameManager.Init();
 
 	// start the game loop
 	while (mainWindow.isOpen())
@@ -36,7 +40,7 @@ int WinMain()
 
 		// Update Loop
 		{
-
+			gameManager.Update(dt);
 		}
 
 		// Render Loop
@@ -45,7 +49,7 @@ int WinMain()
 			mainWindow.clear(sf::Color::Black);
 
 			// Draw stuff here
-
+			gameManager.Render(mainWindow);
 
 			// Finish drawing.
 			mainWindow.display();
