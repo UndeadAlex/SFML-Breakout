@@ -36,6 +36,11 @@ namespace GameRandom
 		float y = RandFloat(pMax.y);
 		return sf::Vector2f(x, y);
 	}
+
+	static sf::Color RandomColor()
+	{
+		return sf::Color(Randint(255), Randint(255), Randint(255));
+	}
 }
 
 #endif

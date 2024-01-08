@@ -15,6 +15,9 @@ public:
 	void Bounce(bool isLeft);
 
 private:
+
+	bool CheckBounds();
+
 	sf::Vector2f mVelocity;
 
 
