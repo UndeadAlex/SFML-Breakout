@@ -2,10 +2,18 @@
 
 #include <stdio.h>
 #include <SFML/Window/Mouse.hpp>
+#include "GameRandom.h"
 
-GameManager::GameManager()
+GameManager::GameManager(sf::RenderWindow& window) : mRenderWindow(window)
 {
+	if (!stdFont.loadFromFile("assets/fonts/FFFFORWA.TTF"))
+	{
+		printf("Failed to load FFF Forward, trying to load arial instead.");
+		stdFont.loadFromFile("arial.ttf");
+	}
 
+	// TODO: Set the ball radius to be different for increased res. e.g. playing the game at 1080p the ball and paddle don't scale. maybe using a % of the screen res to determine size ?
+	mBall.setRadius(10.0f);
 }
 
 GameManager::~GameManager()
@@ -15,39 +23,55 @@ GameManager::~GameManager()
 
 void GameManager::Init()
 {
+	score = 0;
+
 	mPaddle.setPosition(GameConstants::WINDOW_WIDTH / 2, GameConstants::WINDOW_HEIGHT - (mPaddle.getLocalBounds().height + 15));
 	mBall.setPosition(GameConstants::WINDOW_WIDTH / 2, (BRICK_AREA.top + BRICK_AREA.height) + 50);
 
 	//mBricks.resize(NUM_PER_ROW * ROWS);
+	mBricks.clear(); // For restart make sure previous bricks are gone :)
 	for (int y = 0; y < ROWS; y++)
-	for (int x = 0; x < NUM_PER_ROW; x++)
 	{
-		int xSpacing = BRICK_AREA.width / NUM_PER_ROW;
-		int ySpacing = BRICK_AREA.height / ROWS;
+		sf::Color rowColor = GameRandom::RandomColor();
+		for (int x = 0; x < NUM_PER_ROW; x++)
+		{
+			int xSize = BRICK_AREA.width / NUM_PER_ROW;
+			int ySize = BRICK_AREA.height / ROWS;
 
-		mBricks.push_back(Brick((xSpacing * x)+BRICK_AREA.left, (ySpacing * y) + BRICK_AREA.top, xSpacing, ySpacing));
+			// now technically speaking, this leaves the bricks 1px off perfect center, because odd numbers :)
+			mBricks.push_back(Brick((xSize * x)+BRICK_AREA.left+ (BRICK_IN_PADDING/2), (ySize * y) + BRICK_AREA.top+ (BRICK_IN_PADDING / 2), xSize- BRICK_IN_PADDING, ySize- BRICK_IN_PADDING, rowColor));
+		}
 	}
 }
 
 void GameManager::Update(sf::Time& worldTime)
 {
-	/*sf::Vector2i mPos = sf::Mouse::getPosition();
-	mBall.setPosition(sf::Vector2f(mPos));*/
-	mPaddle.Update();
+	if (mBricks.size() <= 0)
+		Init();
+
+	sf::Vector2i mousePos = sf::Mouse::getPosition(mRenderWindow);
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		mBall.setPosition((sf::Vector2f)mousePos);
+	}
+
+	
+	mPaddle.MovePaddle((sf::Vector2f)mousePos);
 	mBall.Update();
 
 	HandleCollisions();
 }
 
-void GameManager::Render(sf::RenderWindow& renderWindow)
+void GameManager::Render()
 {
-	renderWindow.draw(mBall);
-	renderWindow.draw(mPaddle);
+	mRenderWindow.draw(mBall);
+	mRenderWindow.draw(mPaddle);
 
 
 	for (auto& brick : mBricks)
 	{
-		renderWindow.draw(brick);
+		mRenderWindow.draw(brick);
 	}
 
 
@@ -65,6 +89,9 @@ void GameManager::Render(sf::RenderWindow& renderWindow)
 
 void GameManager::HandleCollisions()
 {
+	if (mBall.getPosition().y > GameConstants::WINDOW_HEIGHT)
+		Init(); // calling this to restart the game if they miss the ball, its mean buttttt :) 
+
 	if (mBall.getGlobalBounds().intersects(mPaddle.getGlobalBounds()))
 	{
 		bool isLeftSide = (mBall.getPosition().x - mPaddle.getPosition().x) <= 0;
@@ -82,8 +109,14 @@ void GameManager::HandleCollisions()
 
 			mBricks.erase(mBricks.begin() + i);
 			printf("Ball hit brick!\n");
-			return;
+			score++;
+			return; // this return hopefully should save some time, as long it isn't called at the end of the loop xD
 		}
 	}
+}
+
+void GameManager::UpdateScoreText()
+{
+
 }
 

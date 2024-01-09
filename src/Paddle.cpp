@@ -4,6 +4,7 @@
 #include "GameConstants.h"
 
 #include <stdio.h>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 Paddle::Paddle()
 {
@@ -28,8 +29,8 @@ Paddle::~Paddle()
 
 }
 
-void Paddle::Update()
+void Paddle::MovePaddle(sf::Vector2f pos)
 {
-	float mouseX = GameConstants::ClampFloat(sf::Mouse::getPosition().x, this->getSize().x/2, GameConstants::WINDOW_WIDTH - (this->getSize().x/2));
-	this->setPosition(mouseX, this->getPosition().y);
+	float newX = GameConstants::ClampFloat(pos.x, this->getSize().x/2, GameConstants::WINDOW_WIDTH - (this->getSize().x/2));
+	this->setPosition(newX, this->getPosition().y);
 }

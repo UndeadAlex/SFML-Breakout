@@ -37,7 +37,25 @@ namespace GameRandom
 		return sf::Vector2f(x, y);
 	}
 
-	static sf::Color RandomColor()
+	// r,g,b used to determine the max.
+	inline static sf::Color RandomColor(int r, int g, int b)
+	{
+		return sf::Color(Randint(r), Randint(g), Randint(b));
+	}
+
+	inline static sf::Color RandomColor(int minR, int maxR, int minG, int maxG, int minB, int maxB)
+	{
+		return sf::Color(Randint(minR, maxR), Randint(minG,maxG), Randint(minB, maxB));
+	}
+
+	// Random shade between black and white.
+	inline static sf::Color RandomColor(int maxVal)
+	{
+		return sf::Color(Randint(maxVal), Randint(maxVal), Randint(maxVal));
+	}
+
+	// random 0 - 255 color on all channels.
+	inline static sf::Color RandomColor()
 	{
 		return sf::Color(Randint(255), Randint(255), Randint(255));
 	}

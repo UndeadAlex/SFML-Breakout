@@ -19,7 +19,7 @@ int WinMain()
 	// clock for timing
 	sf::Clock clock;
 
-	GameManager gameManager;
+	GameManager gameManager(mainWindow);
 	gameManager.Init();
 
 	// start the game loop
@@ -49,7 +49,7 @@ int WinMain()
 			mainWindow.clear(sf::Color::Black);
 
 			// Draw stuff here
-			gameManager.Render(mainWindow);
+			gameManager.Render();
 
 			// Finish drawing.
 			mainWindow.display();

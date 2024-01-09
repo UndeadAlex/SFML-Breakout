@@ -7,8 +7,8 @@
 
 namespace GameConstants
 {
-	constexpr int WINDOW_WIDTH = 1920;
-	constexpr int WINDOW_HEIGHT = 1080;
+	constexpr int WINDOW_WIDTH = 1280;
+	constexpr int WINDOW_HEIGHT = 720;
 
 	// set the origin of the text to the centre of it
 	static void CentreTextOrigin(sf::Text& text)
