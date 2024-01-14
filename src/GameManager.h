@@ -22,7 +22,7 @@ public:
 	GameManager(sf::RenderWindow& window);
 	virtual ~GameManager();
 
-	void Init();
+	void Init(bool resetStats);
 	void Update(sf::Time& worldTime);
 	void Render();
 

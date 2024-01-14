@@ -20,7 +20,7 @@ int WinMain()
 	sf::Clock clock;
 
 	GameManager gameManager(mainWindow);
-	gameManager.Init();
+	gameManager.Init(true);
 
 	// start the game loop
 	while (mainWindow.isOpen())
